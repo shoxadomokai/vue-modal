@@ -1,10 +1,12 @@
 <template>
   <div>
-    <div
-      v-if="value && hideBackdrop"
-      class="modal-backdrop"
-      @click.prevent="close"
-    ></div>
+    <transition name="fade">
+      <div
+        v-if="value && hideBackdrop"
+        class="modal-backdrop"
+        @click.prevent="close"
+      ></div>
+    </transition>
     <transition :name="animation">
       <div
         :ref="`modal-${name}`"
@@ -17,9 +19,9 @@
       >
         <button
           v-if="!hideClose"
-          @click.prevent="close"
           class="close"
           aria-label="Close"
+          @click="$emit('close', false)"
         >
           <img src="@/assets/close.png" alt="" />
         </button>
@@ -153,7 +155,6 @@ export default {
   },
   methods: {
     close(event) {
-      if (!event) this.$emit("close", false);
       if (event && event.keyCode === 27) {
         this.$emit("close", false);
       }
@@ -421,5 +422,15 @@ export default {
     filter: blur(0);
     opacity: 1;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
